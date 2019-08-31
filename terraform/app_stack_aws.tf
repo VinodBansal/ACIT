@@ -96,13 +96,15 @@ resource "aws_security_group" "AppSG" {
     to_port = 22
     protocol = "tcp"
     cidr_blocks =  ["0.0.0.0/0"]
-
-    ingress {
-      from_port = 8080
-      to_port = 8080
-      protocol = "tcp"
-      cidr_blocks =  ["0.0.0.0/0"]
-    }
+  }
+  
+  ingress {
+    from_port = 8080
+    to_port = 8080
+    protocol = "tcp"
+    cidr_blocks =  ["0.0.0.0/0"]
+  }
+  
   egress {
     from_port       = 0
     to_port         = 0
@@ -119,7 +121,7 @@ resource "aws_security_group" "AppSG" {
 
 # Define SSH key pair for our instances
 resource "aws_key_pair" "default" {
-  key_name_prefix = "acit-ec2-key"
+  key_name_prefix = "acit-"
   public_key = "${file("${var.key_path}")}"
 }
 
