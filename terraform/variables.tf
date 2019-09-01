@@ -23,7 +23,7 @@ variable "ami" {
   default = "ami-0975ce566eec139c3"
 }
 
-variable "key_path" {
+variable "key_name" {
   description = "SSH Public Key path"
-  default = "Public_Key"
+  default = "acit-app.pem"
 }
