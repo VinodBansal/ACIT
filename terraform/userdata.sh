@@ -8,6 +8,5 @@ export JAVA_HOME=$var
 
 sudo yum install python3 -y
 sudo yum upgrade python3
-pip3 install ansible --user
 sudo yum install git-all
 sudo yum intstall wget zip unzip
