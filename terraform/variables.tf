@@ -22,8 +22,3 @@ variable "ami" {
   description = "Amazon Linux AMI"
   default = "ami-0975ce566eec139c3"
 }
-
-variable "key_name" {
-  description = "SSH Public Key path"
-  default = "acit-app.pem"
-}
