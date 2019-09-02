@@ -38,6 +38,6 @@ echo "**************************************************************" >>$log
 echo "Deploy tomcat and Application" >>$log
 echo "**************************************************************" >>$log
 aws s3 cp s3://acit-team1/Artifactory/webapp-runner.jar /home/app/
-aws s3 cp s3://acit-team1/Artifactory/java-tomcat-maven-example.war /home/app/
-java -jar /opt/app/webapp-runner.jar /opt/app/*.war >>$log
+aws s3 cp s3://acit-team1/Artifactory/acit-web-app.war /home/app/
+#java -jar /home/webapp-runner.jar /home/acit-web-app.war >>$log
 
