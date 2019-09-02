@@ -8,6 +8,7 @@ var=$(readlink -f $(which java) | sed "s:/bin/java::")
 cat >>/etc/environment <<EOL
 export JAVA_HOME=$var
 export PATH=$JAVA_HOME/bin:$PATH
+export PATH=/opt/puppetlabs/puppet/bin:$PATH
 EOL
 source /etc/environment
 echo "install Python3"
