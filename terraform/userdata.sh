@@ -11,6 +11,7 @@ cat >>/etc/environment <<EOL
 export JAVA_HOME=$var
 export PATH=$JAVA_HOME/bin:$PATH
 export PATH=/opt/puppetlabs/puppet/bin:$PATH
+export PATH=/usr/bin/aws/bin:$PATH
 EOL
 source /etc/environment
 echo "install Python3"
@@ -29,6 +30,7 @@ sudo yum install git-all -y >>$log
 curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip" >>$log
 unzip awscli-bundle.zip >>$log
 sudo ./awscli-bundle/install -i /usr/bin/aws -b /usr/bin/aws >>$log
+source /etc/environment
 echo "**************************************************************" >>$log
 echo "Deploy tomcat and Application" >>$log
 /usr/local/bin/aws s3 cp s3://acit-team1/Artifactory/webapp-runner.jar /home/app/ >>$log
