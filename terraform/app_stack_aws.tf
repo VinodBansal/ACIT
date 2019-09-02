@@ -119,6 +119,33 @@ resource "aws_security_group" "AppSG" {
 # public_key = "${file("${var.key_path}")}"
 #}
 
+#define ec2-role
+resource "aws_iam_role" "ec2_role" {
+  name = "ec2-role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:*",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+
+  tags = {
+      tag-key = "acit"
+  }
+}
+
+#define instance profile
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = "ec2_profile"
+  role = "${aws_iam_role.ec2_role.name}"
+}
+
 # Define webserver inside the public subnet
 resource "aws_instance" "wb" {
    ami  = "${var.ami}"
@@ -129,7 +156,7 @@ resource "aws_instance" "wb" {
    associate_public_ip_address = true
    source_dest_check = false
    user_data = "${file("userdata.sh")}"
-
+   iam_instance_profile = "${aws_iam_instance_profile.ec2_profile.name}"
 
   tags = {
     Name = "Appserver"
