@@ -5,7 +5,7 @@ log=/home/boot_log.txt
 echo "Install Java " >>$log
 sudo yum install java-1.8.0-openjdk -y 
 echo "java is installed" >>$log
-echo "Set Java env variables /n" >>$log
+echo "Set Java env variables" >>$log
 var=$(readlink -f $(which java) | sed "s:/bin/java::")
 cat >>/etc/environment <<EOL
 export JAVA_HOME=$var
@@ -37,7 +37,45 @@ echo "awscli is installed" >>$log
 echo "**************************************************************" >>$log
 echo "Deploy tomcat and Application" >>$log
 echo "**************************************************************" >>$log
-aws s3 cp s3://acit-team1/Artifactory/webapp-runner.jar /home/app/
-aws s3 cp s3://acit-team1/Artifactory/acit-web-app.war /home/app/
-#java -jar /home/webapp-runner.jar /home/acit-web-app.war >>$log
+echo "Pull build artefact from S3 bucket (Artefactory) to Remote server >>$log
+#aws s3 cp s3://acit-team1/Artifactory/webapp-runner.jar /home/app/
+aws s3 cp s3://acit-team1/Artifactory/acit-web.war /home/
+#java -jar /home/webapp-runner.jar /home/acit-web-app.war
+
+echo "Deploy tomcat and application" >>$log
+
+groupadd tomcat
+useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
+cd /opt/
+wget http://www-eu.apache.org/dist/tomcat/tomcat-8/v8.5.45/bin/apache-tomcat-8.5.45.tar.gz
+tar -xzvf apache-tomcat-8.5.45.tar.gz
+mv apache-tomcat-8.5.45/* tomcat/
+chown -hR tomcat:tomcat tomcat
+
+cat >/etc/systemd/system/tomcat.service <<EOL
+[Unit]
+Description=Apache Tomcat 8 Servlet Container
+After=syslog.target network.target
+[Service]
+User=tomcat
+Group=tomcat
+Type=forking
+Environment=CATALINA_PID=/opt/tomcat/tomcat.pid
+Environment=CATALINA_HOME=/opt/tomcat
+Environment=CATALINA_BASE=/opt/tomcat
+ExecStart=/opt/tomcat/bin/startup.sh
+ExecStop=/opt/tomcat/bin/shutdown.sh
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
+EOL
+
+cp /home/acit-web.war /opt/tomcat/webapps/
+chown -hR tomcat:tomcat tomcat
+chown -hR tomcat:tomcat /opt/tomcat/webapps/acit-web.war
+echo "start service"
+systemctl daemon-reload
+systemctl start tomcat
+systemctl enable tomcat
+systemctl status tomcat >>$log
 
