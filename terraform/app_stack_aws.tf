@@ -121,22 +121,26 @@ resource "aws_security_group" "AppSG" {
 
 #define ec2-role
 resource "aws_iam_role" "ec2_role" {
-  name = "ec2-role"
+  name = "ec2_role"
+
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
     {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
       "Effect": "Allow",
-      "Action": "s3:*",
-      "Resource": "*"
+      "Sid": ""
     }
   ]
 }
 EOF
 
   tags = {
-      tag-key = "acit"
+      tag-key = "ec2-role"
   }
 }
 
@@ -144,6 +148,27 @@ EOF
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "ec2_profile"
   role = "${aws_iam_role.ec2_role.name}"
+}
+
+#define policy
+resource "aws_iam_role_policy" "test_policy" {
+  name = "test_policy"
+  role = "${aws_iam_role.ec2_role.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
 }
 
 # Define webserver inside the public subnet
