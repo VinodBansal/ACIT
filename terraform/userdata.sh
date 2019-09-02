@@ -33,7 +33,7 @@ sudo ./awscli-bundle/install -i /usr/bin/aws -b /usr/bin/aws >>$log
 source /etc/environment
 echo "**************************************************************" >>$log
 echo "Deploy tomcat and Application" >>$log
-/usr/local/bin/aws s3 cp s3://acit-team1/Artifactory/webapp-runner.jar /home/app/ >>$log
-/usr/local/bin/aws s3 cp s3://acit-team1/Artifactory/java-tomcat-maven-example.war /home/app/ >>$log
+aws s3 cp s3://acit-team1/Artifactory/webapp-runner.jar /home/app/ >>$log
+aws s3 cp s3://acit-team1/Artifactory/java-tomcat-maven-example.war /home/app/ >>$log
 java -jar /opt/app/webapp-runner.jar /opt/app/*.war >>$log >>$log
 
