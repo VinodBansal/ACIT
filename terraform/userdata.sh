@@ -37,7 +37,7 @@ echo "awscli is installed" >>$log
 echo "**************************************************************" >>$log
 echo "Deploy tomcat and Application" >>$log
 echo "**************************************************************" >>$log
-echo "Pull build artefact from S3 bucket (Artefactory) to Remote server >>$log
+echo "Pull build artefact from S3 bucket (Artefactory) to Remote server" >>$log
 #aws s3 cp s3://acit-team1/Artifactory/webapp-runner.jar /home/app/
 aws s3 cp s3://acit-team1/Artifactory/acit-web.war /home/
 #java -jar /home/webapp-runner.jar /home/acit-web-app.war
@@ -73,9 +73,9 @@ EOL
 cp /home/acit-web.war /opt/tomcat/webapps/
 chown -hR tomcat:tomcat tomcat
 chown -hR tomcat:tomcat /opt/tomcat/webapps/acit-web.war
-echo "start service"
-systemctl daemon-reload
+echo "start service" >>$log
+systemctl daemon-reload 
 systemctl start tomcat
 systemctl enable tomcat
-systemctl status tomcat >>$log
+echo "service started"
 
